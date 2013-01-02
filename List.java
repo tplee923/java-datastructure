@@ -52,14 +52,12 @@ public abstract class List<T> {
 			removed = true;
 		    }
 		    if (node==head) {
-			System.out.println("head!!");
 			head = node.nextNode;
 			node.nextNode = null;
 			node.previousNode = null;
 			removed = true;
 		    }
 		    if (node==tail) {
-			System.out.println("tail!!!");
 			tail = node.previousNode;
 			node.nextNode = null;
 			node.previousNode = null;
