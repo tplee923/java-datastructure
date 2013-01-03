@@ -7,6 +7,7 @@ public abstract class List<T> {
     
     public abstract void add(T value);
     public abstract boolean remove(T value);
+    public abstract boolean removeAt(int index);
     public abstract boolean contains(T value);
     public abstract T get(int index);
     public abstract int size();
@@ -39,33 +40,92 @@ public abstract class List<T> {
 	    }
 	    size++;
 	}
+	// insert before index if index is out of range, insert at the end
+	public void insertAt(int index, T value) {
+	    if(head==null) {
+		head = new Node<T>(value);
+		tail = head;
+		head.nextNode = null;
+		head.previousNode = null;
+	    } else {
+		Node<T> node = new Node<T>(value);
+		Node<T> p = head;
+		for(int i=0;i<index && p!=null;i++,p=p.nextNode)
+		    ;
+		if (p==null) {
+		    tail.nextNode = node;
+		    node.previousNode = tail;
+		    node.nextNode = null;
+		    tail = node;
+		} else if (p!=head){
+		    node.previousNode = p.previousNode;
+		    p.previousNode.nextNode = node;
+		    p.previousNode = node;
+		    node.nextNode = p;
+		} else {
+		    node.nextNode = head;
+		    head.previousNode = node;
+		    node.previousNode = null;
+		} 
+	    } 
+
+	}
+	public boolean removeAt(int index) {
+	    Node<T> node = head;
+	    boolean removed = false;
+	    
+	    if (index==0) {
+		return removed;
+	    }
+	    
+	    for(int i=0;i<index && node!=null;i++,node=node.nextNode)
+		;
+	    if (node==head) {
+		head = head.nextNode;
+		head.previousNode = null;
+		removed = true;
+	    } else if (node==tail) {
+		tail = tail.previousNode;
+		tail.nextNode=null
+	    }
+	    else if (node!=null && node!=head) {
+		node.previousNode.nextNode = node.nextNode;
+		node.nextNode.previousNode = node.previousNode;
+		removed = true;
+	    }
+	    return removed;
+	}
+	// remove all the nodes that has specific value 
 	public boolean remove(T value) {
 	    Node<T> node = head;
 	    boolean removed = false;
 	    while (node != null) {
+		Node<T> nextNode = node.nextNode;
 		if (node.value.equals(value)) {
 		    if (node!=head && node!=tail) {
 			node.previousNode.nextNode = node.nextNode;
 			node.nextNode.previousNode = node.previousNode;
-			node.nextNode = null;
+			node.nextNode = null; // actually no need to set to null here
 			node.previousNode = null;
 			removed = true;
 		    }
 		    if (node==head) {
 			head = node.nextNode;
+			head.previousNode = null;
 			node.nextNode = null;
 			node.previousNode = null;
 			removed = true;
 		    }
 		    if (node==tail) {
 			tail = node.previousNode;
+			tail.nextNode = null;
 			node.nextNode = null;
 			node.previousNode = null;
 			removed = true;
 		    }
 
 		}
-		node = node.nextNode;
+		node = nextNode;
 	    }
 	    return removed;
 	}
@@ -131,10 +191,22 @@ Hiding the details of your data structure's implementation also leads to securit
 	}
     }
     public static void main(String args[]) {
-	List<Integer> list = List.createList(ListType.LinkedList);
-        list.add(new Integer(1));
+	List<Integer> list = List.createList(ListType.LinkedList);//cannot write List<int> list=... autoboxing cannot be used in generic type 
+        list.add(1);  //autoboxing to new Integer(1)
+	list.add(2);
+	list.add(3);
+	list.add(4);
+	list.add(5);
+	list.add(6);
+	list.add(7);
+	list.add(8);
+	list.add(9);
+	list.add(7);
+	    
+	list.remove(new Integer(7));
 	
-	list.remove(new Integer(1));
+	list.removeAt(0);
+	list.removeAt(100);
 
 	System.out.println(list);
     }
