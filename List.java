@@ -7,6 +7,7 @@ public abstract class List<T> {
     
     public abstract void add(T value);
     public abstract boolean remove(T value);
+    public abstract void insertAt(int index, T value);
     public abstract boolean removeAt(int index);
     public abstract boolean contains(T value);
     public abstract T get(int index);
@@ -41,7 +42,7 @@ public abstract class List<T> {
 	    size++;
 	}
 	// insert before index if index is out of range, insert at the end
-	public void insertAt(int index, T value) {
+	public void insertAt (int index, T value) {
 	    if(head==null) {
 		head = new Node<T>(value);
 		tail = head;
@@ -66,6 +67,7 @@ public abstract class List<T> {
 		    node.nextNode = head;
 		    head.previousNode = node;
 		    node.previousNode = null;
+		    head = node;
 		} 
 	    } 
 
@@ -86,7 +88,7 @@ public abstract class List<T> {
 		removed = true;
 	    } else if (node==tail) {
 		tail = tail.previousNode;
-		tail.nextNode=null
+		tail.nextNode=null;
 	    }
 	    else if (node!=null && node!=head) {
 		node.previousNode.nextNode = node.nextNode;
@@ -202,12 +204,13 @@ Hiding the details of your data structure's implementation also leads to securit
 	list.add(8);
 	list.add(9);
 	list.add(7);
-	    
-	list.remove(new Integer(7));
+	list.insertAt(0,1);
+	list.insertAt(100,100);
+	list.remove(7);
 	
 	list.removeAt(0);
 	list.removeAt(100);
-
+	
 	System.out.println(list);
     }
 
